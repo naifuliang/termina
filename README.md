@@ -1,0 +1,50 @@
+# Termina
+
+一个简洁、有审美的 macOS 原生终端 —— 界面设计致敬最新版 **Windows Terminal**。
+
+- **标题栏内嵌标签页**：圆角标签、hover 关闭按钮、相邻标签分隔线、`+` 新建与 `⌄` 配置下拉菜单
+- **深色亚克力材质**：标签行使用 `NSVisualEffectView` 毛玻璃，内容区为 Campbell 黑（`#0C0C0C`）
+- **Campbell 配色**：Windows Terminal 默认 ANSI 16 色方案
+- **字体**：优先 Cascadia Mono / CaskaydiaCove Nerd Font，自动回退到 SF Mono
+- **原生实现**：SwiftUI + AppKit，终端仿真核心为 [SwiftTerm](https://github.com/migueldeicaza/SwiftTerm)（登录 shell、真彩色、鼠标上报、滚动回看）
+
+## 构建
+
+```sh
+./scripts/make-app.sh          # 产出 dist/Termina.app（release + 图标 + 签名）
+open dist/Termina.app
+```
+
+开发调试：
+
+```sh
+swift run                      # debug 直接运行
+```
+
+要求 macOS 14+，Swift 5.9+（Command Line Tools 即可，无需完整 Xcode）。
+
+## 快捷键
+
+| 快捷键 | 功能 |
+| --- | --- |
+| ⌘T | 新建标签页 |
+| ⌘W | 关闭当前标签页（最后一个标签关闭即退出） |
+| ⌘⇧] / ⌘⇧[ | 下一个 / 上一个标签页 |
+| ⌘1 … ⌘9 | 切换到第 N 个标签页 |
+| ⌘+ / ⌘− / ⌘0 | 放大 / 缩小 / 重置字体 |
+
+## 结构
+
+```
+Sources/Termina/
+  TerminaApp.swift     # 入口、菜单与快捷键
+  ContentView.swift    # 布局、亚克力背景、窗口样式
+  TabBarView.swift     # Windows Terminal 风格标签栏
+  TabManager.swift     # 标签生命周期与选中状态
+  TerminalTab.swift    # 单个终端会话（SwiftTerm + shell 进程）
+  ShellProfile.swift   # 可用 shell 检测（zsh/bash/fish/…）
+  Theme.swift          # Campbell 配色与字体
+scripts/
+  make-app.sh          # 打包 .app
+  gen_icon.swift       # 程序化生成应用图标
+```
