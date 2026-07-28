@@ -35,16 +35,6 @@ cp "$ROOT/dist/AppIcon.icns" "$APP/Contents/Resources/AppIcon.icns"
 echo "▸ codesign (ad-hoc)"
 codesign --force --sign - "$APP"
 
-echo "▸ building DMG"
-VERSION="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP/Contents/Info.plist")"
-DMG="$ROOT/dist/Termina-v$VERSION-arm64.dmg"
-STAGING="$ROOT/dist/dmg-staging"
-rm -rf "$STAGING" "$DMG"
-mkdir -p "$STAGING"
-cp -R "$APP" "$STAGING/"
-ln -s /Applications "$STAGING/Applications"
-hdiutil create -volname "Termina" -srcfolder "$STAGING" -ov -format UDZO "$DMG" >/dev/null
-rm -rf "$STAGING"
+"$ROOT/scripts/make-dmg.sh"
 
 echo "✓ $APP"
-echo "✓ $DMG"
