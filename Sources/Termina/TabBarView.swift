@@ -138,7 +138,7 @@ private struct NewTabButton: View {
             }
             .buttonStyle(.plain)
             .onHover { hoveringPlus = $0 }
-            .help("新建标签页 (⌘T)")
+            .help(tr("new_tab_help"))
 
             Menu {
                 ForEach(ShellProfile.available) { profile in
@@ -146,20 +146,20 @@ private struct NewTabButton: View {
                 }
                 if !SSHHost.all.isEmpty {
                     Divider()
-                    Menu("SSH 连接") {
+                    Menu(tr("ssh_connections")) {
                         ForEach(SSHHost.all) { host in
                             Menu(host.alias) {
-                                Button("连接") { manager.newSSHTab(destination: host.alias, useTmux: false) }
-                                Button("连接并附加 tmux") { manager.newSSHTab(destination: host.alias, useTmux: true) }
+                                Button(tr("ssh_connect")) { manager.newSSHTab(destination: host.alias, useTmux: false) }
+                                Button(tr("ssh_connect_tmux")) { manager.newSSHTab(destination: host.alias, useTmux: true) }
                             }
                         }
                     }
                 }
-                Button("自定义 SSH 连接…") { manager.sshSheetVisible = true }
+                Button(tr("ssh_custom")) { manager.sshSheetVisible = true }
                 Divider()
-                Button("放大字体  ⌘+") { manager.adjustFontSize(+1) }
-                Button("缩小字体  ⌘−") { manager.adjustFontSize(-1) }
-                Button("重置字体大小  ⌘0") { manager.resetFontSize() }
+                Button(tr("font_bigger") + "  ⌘+") { manager.adjustFontSize(+1) }
+                Button(tr("font_smaller") + "  ⌘−") { manager.adjustFontSize(-1) }
+                Button(tr("font_reset") + "  ⌘0") { manager.resetFontSize() }
             } label: {
                 Image(systemName: "chevron.down")
                     .font(.system(size: 9, weight: .semibold))

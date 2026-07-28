@@ -11,7 +11,7 @@ struct SSHConnectSheet: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
-            Text("SSH 连接")
+            Text(tr("ssh_sheet_title"))
                 .font(.headline)
 
             TextField("user@host[:port]", text: $destination)
@@ -19,17 +19,17 @@ struct SSHConnectSheet: View {
                 .onSubmit { connect() }
 
             VStack(alignment: .leading, spacing: 4) {
-                Toggle("连接后附加 tmux 会话", isOn: $useTmux)
-                Text("远程执行 tmux new-session -A -s termina")
+                Toggle(tr("ssh_tmux_toggle"), isOn: $useTmux)
+                Text(tr("ssh_tmux_caption"))
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
 
             HStack {
                 Spacer()
-                Button("取消") { dismiss() }
+                Button(tr("cancel")) { dismiss() }
                     .keyboardShortcut(.cancelAction)
-                Button("连接") { connect() }
+                Button(tr("ssh_connect")) { connect() }
                     .keyboardShortcut(.defaultAction)
                     .disabled(destination.trimmingCharacters(in: .whitespaces).isEmpty)
             }

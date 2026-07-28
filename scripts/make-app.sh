@@ -18,6 +18,11 @@ mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 cp "$BIN" "$APP/Contents/MacOS/Termina"
 cp "$ROOT/scripts/Info.plist" "$APP/Contents/Info.plist"
 
+BUNDLE_DIR="$(swift build -c "$CONFIG" --show-bin-path)/Termina_Termina.bundle"
+if [ -d "$BUNDLE_DIR" ]; then
+  cp -R "$BUNDLE_DIR" "$APP/Contents/Resources/"
+fi
+
 if ! [ -f "$ROOT/dist/AppIcon.icns" ]; then
   echo "▸ generating icon"
   ICONSET="$ROOT/dist/AppIcon.iconset"

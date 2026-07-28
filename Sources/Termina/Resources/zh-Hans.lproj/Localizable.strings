@@ -1,0 +1,20 @@
+/* 简体中文 */
+"new_tab" = "新建标签页";
+"new_tab_with_profile" = "使用配置新建";
+"close_tab" = "关闭标签页";
+"tabs_menu" = "标签页";
+"next_tab" = "下一个标签页";
+"previous_tab" = "上一个标签页";
+"tab_n" = "标签页 %d";
+"font_bigger" = "放大字体";
+"font_smaller" = "缩小字体";
+"font_reset" = "实际大小";
+"new_tab_help" = "新建标签页 (⌘T)";
+"ssh_connections" = "SSH 连接";
+"ssh_connect" = "连接";
+"ssh_connect_tmux" = "连接并附加 tmux";
+"ssh_custom" = "自定义 SSH 连接…";
+"ssh_sheet_title" = "SSH 连接";
+"ssh_tmux_toggle" = "连接后附加 tmux 会话";
+"ssh_tmux_caption" = "在远程主机执行 \"tmux new-session -A -s termina\"";
+"cancel" = "取消";

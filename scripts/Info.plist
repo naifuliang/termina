@@ -8,6 +8,13 @@
 	<string>Termina</string>
 	<key>CFBundleIdentifier</key>
 	<string>dev.naifu.termina</string>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>en</string>
+		<string>zh-Hans</string>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>0.1.0</string>
 	<key>CFBundleShortVersionString</key>

@@ -3,6 +3,7 @@ import PackageDescription
 
 let package = Package(
     name: "Termina",
+    defaultLocalization: "en",
     platforms: [.macOS(.v14)],
     dependencies: [
         .package(url: "https://github.com/migueldeicaza/SwiftTerm.git", from: "1.13.0")
@@ -13,7 +14,8 @@ let package = Package(
             dependencies: [
                 .product(name: "SwiftTerm", package: "SwiftTerm")
             ],
-            path: "Sources/Termina"
+            path: "Sources/Termina",
+            resources: [.process("Resources")]
         )
     ]
 )

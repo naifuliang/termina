@@ -13,10 +13,10 @@ struct TerminaApp: App {
         .defaultSize(width: 1060, height: 680)
         .commands {
             CommandGroup(replacing: .newItem) {
-                Button("新建标签页") { TabManager.shared.newTab() }
+                Button(tr("new_tab")) { TabManager.shared.newTab() }
                     .keyboardShortcut("t", modifiers: .command)
 
-                Menu("使用配置新建") {
+                Menu(tr("new_tab_with_profile")) {
                     ForEach(ShellProfile.available) { profile in
                         Button(profile.name) { TabManager.shared.newTab(profile: profile) }
                     }
@@ -24,7 +24,7 @@ struct TerminaApp: App {
             }
 
             CommandGroup(replacing: .saveItem) {
-                Button("关闭标签页") {
+                Button(tr("close_tab")) {
                     if let tab = TabManager.shared.selectedTab {
                         TabManager.shared.close(tab)
                     }
@@ -32,16 +32,16 @@ struct TerminaApp: App {
                 .keyboardShortcut("w", modifiers: .command)
             }
 
-            CommandMenu("标签页") {
-                Button("下一个标签页") { TabManager.shared.selectNext() }
+            CommandMenu(tr("tabs_menu")) {
+                Button(tr("next_tab")) { TabManager.shared.selectNext() }
                     .keyboardShortcut("]", modifiers: [.command, .shift])
-                Button("上一个标签页") { TabManager.shared.selectPrevious() }
+                Button(tr("previous_tab")) { TabManager.shared.selectPrevious() }
                     .keyboardShortcut("[", modifiers: [.command, .shift])
 
                 Divider()
 
                 ForEach(1...9, id: \.self) { number in
-                    Button("标签页 \(number)") {
+                    Button(tr("tab_n", number)) {
                         TabManager.shared.selectTab(at: number - 1)
                     }
                     .keyboardShortcut(
@@ -50,11 +50,11 @@ struct TerminaApp: App {
             }
 
             CommandGroup(after: .toolbar) {
-                Button("放大字体") { TabManager.shared.adjustFontSize(+1) }
+                Button(tr("font_bigger")) { TabManager.shared.adjustFontSize(+1) }
                     .keyboardShortcut("+", modifiers: .command)
-                Button("缩小字体") { TabManager.shared.adjustFontSize(-1) }
+                Button(tr("font_smaller")) { TabManager.shared.adjustFontSize(-1) }
                     .keyboardShortcut("-", modifiers: .command)
-                Button("实际大小") { TabManager.shared.resetFontSize() }
+                Button(tr("font_reset")) { TabManager.shared.resetFontSize() }
                     .keyboardShortcut("0", modifiers: .command)
             }
         }
