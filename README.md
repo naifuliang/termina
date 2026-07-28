@@ -10,6 +10,7 @@ A minimal, aesthetic native macOS terminal — its interface pays homage to the 
 - **Fonts**: prefers Cascadia Mono / CaskaydiaCove Nerd Font, falls back to SF Mono
 - **Native implementation**: SwiftUI + AppKit with [SwiftTerm](https://github.com/migueldeicaza/SwiftTerm) as the emulation core (login shell, true color, mouse reporting, scrollback)
 - **SSH remote connections**: reads Host entries from `~/.ssh/config` for one-click connect, optionally attaching a remote tmux session (`tmux new-session -A -s termina`); ad-hoc `user@host[:port]` connections are also supported
+- **Localized UI**: English (default), 简体中文, 繁體中文, 日本語, 한국어, Français, Deutsch, Español, Português (BR), Русский, Italiano — follows the system language
 
 ## Build
 

@@ -1,0 +1,20 @@
+/* 日本語 */
+"new_tab" = "新規タブ";
+"new_tab_with_profile" = "プロファイルから新規タブ";
+"close_tab" = "タブを閉じる";
+"tabs_menu" = "タブ";
+"next_tab" = "次のタブ";
+"previous_tab" = "前のタブ";
+"tab_n" = "タブ %d";
+"font_bigger" = "文字を拡大";
+"font_smaller" = "文字を縮小";
+"font_reset" = "実際のサイズ";
+"new_tab_help" = "新規タブ (⌘T)";
+"ssh_connections" = "SSH 接続";
+"ssh_connect" = "接続";
+"ssh_connect_tmux" = "接続して tmux にアタッチ";
+"ssh_custom" = "カスタム SSH 接続…";
+"ssh_sheet_title" = "SSH 接続";
+"ssh_tmux_toggle" = "接続後に tmux セッションにアタッチ";
+"ssh_tmux_caption" = "リモートホストで「tmux new-session -A -s termina」を実行します";
+"cancel" = "キャンセル";

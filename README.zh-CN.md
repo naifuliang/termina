@@ -10,6 +10,7 @@
 - **字体**：优先 Cascadia Mono / CaskaydiaCove Nerd Font，自动回退到 SF Mono
 - **原生实现**：SwiftUI + AppKit，终端仿真核心为 [SwiftTerm](https://github.com/migueldeicaza/SwiftTerm)（登录 shell、真彩色、鼠标上报、滚动回看）
 - **SSH 远程连接**：自动读取 `~/.ssh/config` 中的 Host 列表，一键连接或连接后附加 tmux 会话（`tmux new-session -A -s termina`）；也可通过「自定义 SSH 连接…」临时输入 `user@host[:port]`
+- **多语言界面**：默认英文，支持简体中文、繁體中文、日语、韩语、法语、德语、西语、葡语（巴西）、俄语、意大利语，跟随系统语言自动切换
 
 ## 构建
 

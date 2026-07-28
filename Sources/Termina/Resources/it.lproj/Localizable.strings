@@ -1,0 +1,20 @@
+/* Italiano */
+"new_tab" = "Nuovo pannello";
+"new_tab_with_profile" = "Nuovo pannello con profilo";
+"close_tab" = "Chiudi pannello";
+"tabs_menu" = "Pannelli";
+"next_tab" = "Pannello successivo";
+"previous_tab" = "Pannello precedente";
+"tab_n" = "Pannello %d";
+"font_bigger" = "Aumenta dimensioni testo";
+"font_smaller" = "Riduci dimensioni testo";
+"font_reset" = "Dimensioni effettive";
+"new_tab_help" = "Nuovo pannello (⌘T)";
+"ssh_connections" = "Connessioni SSH";
+"ssh_connect" = "Connetti";
+"ssh_connect_tmux" = "Connetti e collega tmux";
+"ssh_custom" = "Connessione SSH personalizzata…";
+"ssh_sheet_title" = "Connessione SSH";
+"ssh_tmux_toggle" = "Collega una sessione tmux dopo la connessione";
+"ssh_tmux_caption" = "Esegue \"tmux new-session -A -s termina\" sull'host remoto";
+"cancel" = "Annulla";

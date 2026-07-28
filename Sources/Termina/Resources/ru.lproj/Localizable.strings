@@ -1,0 +1,20 @@
+/* Русский */
+"new_tab" = "Новая вкладка";
+"new_tab_with_profile" = "Новая вкладка с профилем";
+"close_tab" = "Закрыть вкладку";
+"tabs_menu" = "Вкладки";
+"next_tab" = "Следующая вкладка";
+"previous_tab" = "Предыдущая вкладка";
+"tab_n" = "Вкладка %d";
+"font_bigger" = "Увеличить шрифт";
+"font_smaller" = "Уменьшить шрифт";
+"font_reset" = "Фактический размер";
+"new_tab_help" = "Новая вкладка (⌘T)";
+"ssh_connections" = "SSH-подключения";
+"ssh_connect" = "Подключиться";
+"ssh_connect_tmux" = "Подключиться и присоединить tmux";
+"ssh_custom" = "Произвольное SSH-подключение…";
+"ssh_sheet_title" = "SSH-подключение";
+"ssh_tmux_toggle" = "Присоединить сеанс tmux после подключения";
+"ssh_tmux_caption" = "Выполняет \"tmux new-session -A -s termina\" на удалённом хосте";
+"cancel" = "Отменить";
