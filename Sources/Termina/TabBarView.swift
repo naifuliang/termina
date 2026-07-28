@@ -42,6 +42,7 @@ struct TabBarView: View {
         .frame(height: Theme.tabBarHeight)
         .frame(maxWidth: .infinity)
         .contentShape(Rectangle())
+        .background(TitleBarGestureView())
     }
 
     /// Windows Terminal draws a thin separator between two adjacent
@@ -66,7 +67,7 @@ private struct TabItemView: View {
     var body: some View {
         Button(action: select) {
         HStack(spacing: 6) {
-            Image(systemName: "chevron.right.square")
+            Image(systemName: tab.iconName)
                 .font(.system(size: 11, weight: .medium))
                 .foregroundStyle(isSelected ? Color.white.opacity(0.85) : Color.white.opacity(0.45))
 
@@ -143,6 +144,18 @@ private struct NewTabButton: View {
                 ForEach(ShellProfile.available) { profile in
                     Button(profile.name) { manager.newTab(profile: profile) }
                 }
+                if !SSHHost.all.isEmpty {
+                    Divider()
+                    Menu("SSH 连接") {
+                        ForEach(SSHHost.all) { host in
+                            Menu(host.alias) {
+                                Button("连接") { manager.newSSHTab(destination: host.alias, useTmux: false) }
+                                Button("连接并附加 tmux") { manager.newSSHTab(destination: host.alias, useTmux: true) }
+                            }
+                        }
+                    }
+                }
+                Button("自定义 SSH 连接…") { manager.sshSheetVisible = true }
                 Divider()
                 Button("放大字体  ⌘+") { manager.adjustFontSize(+1) }
                 Button("缩小字体  ⌘−") { manager.adjustFontSize(-1) }

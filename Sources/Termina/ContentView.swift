@@ -34,6 +34,7 @@ struct ContentView: View {
         .ignoresSafeArea()
         .background(WindowConfigurator())
         .onAppear { manager.bootstrap() }
+        .sheet(isPresented: $manager.sshSheetVisible) { SSHConnectSheet(manager: manager) }
         .preferredColorScheme(.dark)
     }
 }
@@ -90,5 +91,26 @@ struct WindowConfigurator: NSViewRepresentable {
         return probe
     }
 
+    func updateNSView(_ nsView: NSView, context: Context) {}
+}
+
+/// Behaves like a real title bar: drag moves the window, double-click
+/// zooms/minimizes per the System Settings preference.
+struct TitleBarGestureView: NSViewRepresentable {
+    final class GestureNSView: NSView {
+        override func mouseDown(with event: NSEvent) {
+            guard let window else { return }
+            if event.clickCount == 2 {
+                switch UserDefaults.standard.string(forKey: "AppleActionOnDoubleClick") {
+                case "Minimize": window.performMiniaturize(nil)
+                case "None": break
+                default: window.zoom(nil)
+                }
+            } else {
+                window.performDrag(with: event)
+            }
+        }
+    }
+    func makeNSView(context: Context) -> NSView { GestureNSView() }
     func updateNSView(_ nsView: NSView, context: Context) {}
 }

@@ -7,6 +7,7 @@
 - **Campbell 配色**：Windows Terminal 默认 ANSI 16 色方案
 - **字体**：优先 Cascadia Mono / CaskaydiaCove Nerd Font，自动回退到 SF Mono
 - **原生实现**：SwiftUI + AppKit，终端仿真核心为 [SwiftTerm](https://github.com/migueldeicaza/SwiftTerm)（登录 shell、真彩色、鼠标上报、滚动回看）
+- **SSH 远程连接**：自动读取 `~/.ssh/config` 中的 Host 列表，一键连接或连接后附加 tmux 会话（`tmux new-session -A -s termina`）；也可通过“自定义 SSH 连接…”临时输入 `user@host[:port]`
 
 ## 构建
 
@@ -41,8 +42,10 @@ Sources/Termina/
   ContentView.swift    # 布局、亚克力背景、窗口样式
   TabBarView.swift     # Windows Terminal 风格标签栏
   TabManager.swift     # 标签生命周期与选中状态
-  TerminalTab.swift    # 单个终端会话（SwiftTerm + shell 进程）
+  TerminalTab.swift    # 单个终端会话（SwiftTerm + shell/SSH 进程）
   ShellProfile.swift   # 可用 shell 检测（zsh/bash/fish/…）
+  SSHHost.swift         # 解析 ~/.ssh/config 中的 Host 列表
+  SSHConnectSheet.swift # 自定义 SSH 连接输入框
   Theme.swift          # Campbell 配色与字体
 scripts/
   make-app.sh          # 打包 .app

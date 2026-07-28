@@ -10,6 +10,7 @@ final class TabManager: ObservableObject {
     @Published private(set) var tabs: [TerminalTab] = []
     @Published var selectedID: UUID?
     @Published private(set) var fontSize: CGFloat = TabManager.defaultFontSize
+    @Published var sshSheetVisible = false
 
     private static let defaultFontSize: CGFloat = 13
 
@@ -25,10 +26,18 @@ final class TabManager: ObservableObject {
     // MARK: - Tab lifecycle
 
     func newTab(profile: ShellProfile = .default) {
-        let tab = TerminalTab(profile: profile, fontSize: fontSize)
+        newTab(target: .shell(profile))
+    }
+
+    func newTab(target: LaunchTarget) {
+        let tab = TerminalTab(target: target, fontSize: fontSize)
         tab.manager = self
         tabs.append(tab)
         selectedID = tab.id
+    }
+
+    func newSSHTab(destination: String, port: String? = nil, useTmux: Bool) {
+        newTab(target: .ssh(destination: destination, port: port, useTmux: useTmux))
     }
 
     func select(_ tab: TerminalTab) {

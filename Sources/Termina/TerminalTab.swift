@@ -1,10 +1,16 @@
 import AppKit
 import SwiftTerm
 
+enum LaunchTarget {
+    case shell(ShellProfile)
+    case ssh(destination: String, port: String?, useTmux: Bool)
+}
+
 /// One terminal session: owns the SwiftTerm view and its shell process.
 final class TerminalTab: ObservableObject, Identifiable {
     let id = UUID()
-    let profile: ShellProfile
+    let target: LaunchTarget
+    let iconName: String
     @Published var title: String
 
     let terminalView: LocalProcessTerminalView
@@ -14,13 +20,27 @@ final class TerminalTab: ObservableObject, Identifiable {
     /// deriving the title from the working directory.
     private var hasExplicitTitle = false
 
-    init(profile: ShellProfile, fontSize: CGFloat) {
-        self.profile = profile
-        self.title = profile.name
+    init(target: LaunchTarget, fontSize: CGFloat) {
+        self.target = target
+        switch target {
+        case .shell(let profile):
+            self.title = profile.name
+            self.iconName = "chevron.right.square"
+        case .ssh(let destination, _, let useTmux):
+            self.title = useTmux ? "\(destination) · tmux" : destination
+            self.iconName = "network"
+        }
         self.terminalView = LocalProcessTerminalView(
             frame: NSRect(x: 0, y: 0, width: 800, height: 480))
         configure(fontSize: fontSize)
-        launchShell()
+        launch()
+    }
+
+    private var defaultTitle: String {
+        switch target {
+        case .shell(let profile): return profile.name
+        case .ssh(let destination, _, _): return destination
+        }
     }
 
     private func configure(fontSize: CGFloat) {
@@ -35,7 +55,7 @@ final class TerminalTab: ObservableObject, Identifiable {
         tv.optionAsMetaKey = true
     }
 
-    private func launchShell() {
+    private func launch() {
         var env = ProcessInfo.processInfo.environment
         env["TERM"] = "xterm-256color"
         env["COLORTERM"] = "truecolor"
@@ -43,14 +63,26 @@ final class TerminalTab: ObservableObject, Identifiable {
         if env["LANG"] == nil { env["LANG"] = "en_US.UTF-8" }
 
         let home = FileManager.default.homeDirectoryForCurrentUser.path
-        terminalView.startProcess(
-            executable: profile.path,
-            args: [],
-            environment: env.map { "\($0.key)=\($0.value)" },
-            // leading dash marks it as a login shell
-            execName: "-" + profile.name,
-            currentDirectory: home
-        )
+
+        switch target {
+        case .shell(let profile):
+            terminalView.startProcess(
+                executable: profile.path,
+                args: [],
+                environment: env.map { "\($0.key)=\($0.value)" },
+                // leading dash marks it as a login shell
+                execName: "-" + profile.name,
+                currentDirectory: home
+            )
+        case .ssh(let destination, let port, let useTmux):
+            var args: [String] = []
+            if let port { args += ["-p", port] }
+            if useTmux { args += ["-t", destination, "tmux new-session -A -s termina"] }
+            else { args.append(destination) }
+            terminalView.startProcess(executable: "/usr/bin/ssh", args: args,
+                environment: env.map { "\($0.key)=\($0.value)" },
+                currentDirectory: home)
+        }
     }
 }
 
@@ -60,7 +92,7 @@ extension TerminalTab: LocalProcessTerminalViewDelegate {
     func setTerminalTitle(source: LocalProcessTerminalView, title: String) {
         DispatchQueue.main.async {
             self.hasExplicitTitle = !title.isEmpty
-            self.title = title.isEmpty ? self.profile.name : title
+            self.title = title.isEmpty ? self.defaultTitle : title
         }
     }
 
