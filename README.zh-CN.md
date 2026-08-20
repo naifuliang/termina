@@ -12,6 +12,16 @@
 - **SSH 远程连接**：自动读取 `~/.ssh/config` 中的 Host 列表，一键连接或连接后附加 tmux 会话（`tmux new-session -A -s termina`）；也可通过「自定义 SSH 连接…」临时输入 `user@host[:port]`
 - **多语言界面**：默认英文，支持简体中文、繁體中文、日语、韩语、法语、德语、西语、葡语（巴西）、俄语、意大利语，跟随系统语言自动切换
 
+## 安装
+
+一行命令安装——直接下载最新 Release 并启动，**无 Gatekeeper 弹窗**（curl 下载不会像浏览器那样添加隔离属性）：
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/naifuliang/termina/main/install.sh | sh
+```
+
+也可以从 [Releases](https://github.com/naifuliang/termina/releases) 下载 DMG；预览版未经公证，首次打开需要在「系统设置 → 隐私与安全性」中点击允许。
+
 ## 构建
 
 ```sh

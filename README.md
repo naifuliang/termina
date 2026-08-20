@@ -12,6 +12,17 @@ A minimal, aesthetic native macOS terminal — its interface pays homage to the 
 - **SSH remote connections**: reads Host entries from `~/.ssh/config` for one-click connect, optionally attaching a remote tmux session (`tmux new-session -A -s termina`); ad-hoc `user@host[:port]` connections are also supported
 - **Localized UI**: English (default), 简体中文, 繁體中文, 日本語, 한국어, Français, Deutsch, Español, Português (BR), Русский, Italiano — follows the system language
 
+## Install
+
+One-liner — downloads the latest release and launches it directly, with no
+Gatekeeper prompt (curl does not set the quarantine attribute browsers do):
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/naifuliang/termina/main/install.sh | sh
+```
+
+Alternatively grab the DMG from [Releases](https://github.com/naifuliang/termina/releases); since preview builds are not notarized, macOS will ask you to allow the app under System Settings → Privacy & Security on first launch.
+
 ## Build
 
 ```sh

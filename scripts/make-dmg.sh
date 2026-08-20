@@ -7,7 +7,7 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 APP="$ROOT/dist/Termina.app"
 [ -d "$APP" ] || { echo "error: $APP not found — run make-app.sh first" >&2; exit 1; }
 
-VERSION="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP/Contents/Info.plist")"
+VERSION="${TERMINA_VERSION_LABEL:-$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP/Contents/Info.plist")}"
 DMG="$ROOT/dist/Termina-v$VERSION-arm64.dmg"
 WORK="$ROOT/dist/dmg-work"
 
@@ -37,5 +37,8 @@ rm -f "$DMG"
   -D icns="$ROOT/dist/AppIcon.icns" \
   "Termina" "$DMG"
 rm -rf "$WORK"
+
+echo "▸ writing checksums"
+( cd "$ROOT/dist" && /usr/bin/shasum -a 256 "$(basename "$DMG")" > "$(basename "$DMG").sha256" )
 
 echo "✓ $DMG"

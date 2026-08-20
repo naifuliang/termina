@@ -37,4 +37,12 @@ codesign --force --sign - "$APP"
 
 "$ROOT/scripts/make-dmg.sh"
 
+echo "▸ zipping"
+VERSION="${TERMINA_VERSION_LABEL:-$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP/Contents/Info.plist")}"
+ZIP="$ROOT/dist/Termina-v$VERSION-arm64.zip"
+rm -f "$ZIP" "$ZIP.sha256"
+ditto -c -k --keepParent "$APP" "$ZIP"
+( cd "$ROOT/dist" && /usr/bin/shasum -a 256 "$(basename "$ZIP")" > "$(basename "$ZIP").sha256" )
+
 echo "✓ $APP"
+echo "✓ $ZIP"
