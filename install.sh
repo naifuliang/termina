@@ -1,7 +1,7 @@
-#!/bin/zsh
-# Termina installer / updater.
+#!/bin/sh
+# Termina installer / updater. POSIX sh — works piped into sh, bash or zsh:
 #
-#   curl -fsSL https://raw.githubusercontent.com/naifuliang/termina/main/install.sh | zsh
+#   curl -fsSL https://raw.githubusercontent.com/naifuliang/termina/main/install.sh | sh
 #
 # Downloads the newest release (previews included) with curl — which,
 # unlike a browser, does not set the quarantine attribute — verifies its
@@ -12,7 +12,7 @@
 #   TERMINA_OPEN_APP         set 0 to skip launching after install
 #   TERMINA_INSTALL_CONFIRM  set 1 to skip the confirmation prompt
 #   TERMINA_RELEASE_TAG      install a specific tag instead of the newest
-set -euo pipefail
+set -eu
 
 APP_NAME="Termina"
 REPO="naifuliang/termina"
@@ -25,11 +25,11 @@ WORK_DIR="$(/usr/bin/mktemp -d "${TMPDIR:-/tmp}/termina-install.XXXXXX")"
 cleanup() { /bin/rm -rf "$WORK_DIR"; }
 trap cleanup EXIT INT TERM
 
-if [[ "$(/usr/bin/uname -s)" != "Darwin" ]]; then
+if [ "$(/usr/bin/uname -s)" != "Darwin" ]; then
     echo "error: $APP_NAME is a macOS app" >&2
     exit 1
 fi
-if [[ "$(/usr/bin/uname -m)" != "arm64" ]]; then
+if [ "$(/usr/bin/uname -m)" != "arm64" ]; then
     echo "error: prebuilt binaries are Apple Silicon only — build from source:" >&2
     echo "       git clone https://github.com/$REPO && cd termina && ./scripts/make-app.sh" >&2
     exit 1
@@ -40,22 +40,28 @@ echo ""
 echo "This installer downloads the latest $APP_NAME release from GitHub,"
 echo "verifies its SHA-256 checksum, and installs it into $INSTALL_DIR."
 echo ""
-if [[ "$CONFIRM" != "1" ]]; then
-    read "REPLY?Continue? [y/N] " </dev/tty
-    if [[ ! "$REPLY" =~ ^[Yy]$ ]]; then
-        echo "Cancelled."
-        exit 0
+if [ "$CONFIRM" != "1" ]; then
+    if [ -r /dev/tty ]; then
+        printf "Continue? [y/N] " > /dev/tty
+        read REPLY < /dev/tty || REPLY=""
+        case "$REPLY" in
+            [Yy]*) ;;
+            *) echo "Cancelled."; exit 0 ;;
+        esac
+    else
+        echo "note: no terminal available for confirmation — continuing"
     fi
 fi
 
-if [[ -z "$TAG" ]]; then
+if [ -z "$TAG" ]; then
     echo "Resolving the newest release…"
     TAG="$(/usr/bin/curl --fail --silent --show-error --location \
         "https://api.github.com/repos/$REPO/releases?per_page=1" |
         /usr/bin/grep -m1 '"tag_name"' | /usr/bin/cut -d'"' -f4)"
 fi
-if [[ -z "$TAG" ]]; then
+if [ -z "$TAG" ]; then
     echo "error: could not determine the release to install" >&2
+    echo "       (you can pin one: TERMINA_RELEASE_TAG=v0.1.0-preview)" >&2
     exit 1
 fi
 echo "Installing $APP_NAME $TAG"
@@ -69,27 +75,29 @@ echo "Downloading…"
 /usr/bin/curl --fail --silent --show-error --location "$BASE/$ASSET" --output "$ARCHIVE_PATH"
 /usr/bin/curl --fail --silent --show-error --location "$BASE/$ASSET.sha256" --output "$CHECKSUM_PATH"
 
-EXPECTED_HASH="$(/usr/bin/awk 'NF { print $1; exit }' "$CHECKSUM_PATH")"
-if ! /usr/bin/printf '%s\n' "$EXPECTED_HASH" | /usr/bin/grep -Eq '^[[:xdigit:]]{64}$'; then
+lower() { /usr/bin/tr '[:upper:]' '[:lower:]'; }
+EXPECTED_HASH="$(/usr/bin/awk 'NF { print $1; exit }' "$CHECKSUM_PATH" | lower)"
+if ! printf '%s\n' "$EXPECTED_HASH" | /usr/bin/grep -Eq '^[0-9a-f]{64}$'; then
     echo "The release checksum file is invalid. Installation stopped." >&2
     exit 1
 fi
-ACTUAL_HASH="$(/usr/bin/shasum -a 256 "$ARCHIVE_PATH" | /usr/bin/awk '{ print $1 }')"
-if [[ "${ACTUAL_HASH:l}" != "${EXPECTED_HASH:l}" ]]; then
+ACTUAL_HASH="$(/usr/bin/shasum -a 256 "$ARCHIVE_PATH" | /usr/bin/awk '{ print $1 }' | lower)"
+if [ "$ACTUAL_HASH" != "$EXPECTED_HASH" ]; then
     echo "The downloaded archive failed its SHA-256 check. Installation stopped." >&2
     exit 1
 fi
 
 /usr/bin/ditto -x -k "$ARCHIVE_PATH" "$WORK_DIR/unpacked"
-if [[ ! -d "$WORK_DIR/unpacked/$APP_NAME.app" ]]; then
+if [ ! -d "$WORK_DIR/unpacked/$APP_NAME.app" ]; then
     echo "error: archive did not contain $APP_NAME.app" >&2
     exit 1
 fi
 
-if [[ ! -w "$INSTALL_DIR" ]]; then
+/bin/mkdir -p "$INSTALL_DIR" 2>/dev/null || true
+if [ ! -d "$INSTALL_DIR" ] || [ ! -w "$INSTALL_DIR" ]; then
     INSTALL_DIR="$HOME/Applications"
     /bin/mkdir -p "$INSTALL_DIR"
-    echo "note: /Applications is not writable — installing to $INSTALL_DIR"
+    echo "note: falling back to $INSTALL_DIR"
 fi
 
 echo "Installing to $INSTALL_DIR/$APP_NAME.app…"
@@ -99,6 +107,6 @@ echo "Installing to $INSTALL_DIR/$APP_NAME.app…"
 /usr/bin/xattr -dr com.apple.quarantine "$INSTALL_DIR/$APP_NAME.app" 2>/dev/null || true
 
 echo "✓ $APP_NAME $TAG installed"
-if [[ "$OPEN_APP" == "1" ]]; then
+if [ "$OPEN_APP" = "1" ]; then
     /usr/bin/open "$INSTALL_DIR/$APP_NAME.app"
 fi
