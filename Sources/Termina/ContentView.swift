@@ -83,7 +83,11 @@ struct WindowConfigurator: NSViewRepresentable {
             window.titleVisibility = .hidden
             window.titlebarAppearsTransparent = true
             window.styleMask.insert(.fullSizeContentView)
-            window.isMovableByWindowBackground = true
+            // Never move the window from a content-area drag: SwiftTerm's
+            // view does not override mouseDownCanMoveWindow, so background
+            // dragging would swallow text-selection drags in the terminal.
+            // The tab row handles window dragging via TitleBarGestureView.
+            window.isMovableByWindowBackground = false
             window.minSize = NSSize(width: 600, height: 400)
             window.appearance = NSAppearance(named: .darkAqua)
             window.tabbingMode = .disallowed
